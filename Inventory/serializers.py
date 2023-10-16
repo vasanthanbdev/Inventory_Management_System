@@ -21,8 +21,8 @@ class VendorSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['name', 'email', 'contact', 'city', 'address']
         
 
-# #customers
-# class CustomerSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
-#         model = Customer
-#         fields = ['name', 'email', 'contact', 'city', 'address']
+#customers
+class CustomerSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['name', 'email', 'contact', 'city', 'address']

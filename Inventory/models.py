@@ -112,35 +112,31 @@ class Warehouse(models.Model):
         return self.name
 
 #customer model
-# class Customer(models.Model):
-#     id = models.CharField(max_length=10, primary_key=True, editable=False)
-#     name = models.CharField(max_length=100, null=True, blank=True)
-#     email = models.CharField(max_length=100, null=True, blank=True)  
-#     contact = models.CharField(max_length=15, null=True, blank=True)
-#     city = models.CharField(max_length=50, null=True, blank=True)
-#     address = models.TextField(null=True, blank=True)
+class Customer(models.Model):
+    id = models.CharField(max_length=10, primary_key=True, editable=False)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    email = models.CharField(max_length=100, null=True, blank=True)  
+    contact = models.CharField(max_length=15, null=True, blank=True)
+    city = models.CharField(max_length=50, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
     
-#     class Meta:
-#         ordering = ['name']
-        
-#     class CustomerManager(models.Manager):
-#         def by_name(self, name):
-#             return self.filter(name__icontains=name)
+    class Meta:
+        ordering = ['name']
     
-#     def save(self, *args, **kwargs):
-#         if not self.id:
-#             # Generate ID once
-#             last_po = Customer.objects.order_by('id').last()
-#             if not last_po:
-#                 new_id = 'CU-000001'
-#             else:
-#                 id_int = int(last_po.id.split('-')[-1]) 
-#                 new_id = f'CU-{str(id_int+1).zfill(6)}'
-#             self.id = new_id
-#         super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # Generate ID once
+            last_po = Customer.objects.order_by('id').last()
+            if not last_po:
+                new_id = 'CU-000001'
+            else:
+                id_int = int(last_po.id.split('-')[-1]) 
+                new_id = f'CU-{str(id_int+1).zfill(6)}'
+            self.id = new_id
+        super().save(*args, **kwargs)
 
-#     def __str__(self) -> str:
-#         return self.name
+    def __str__(self) -> str:
+        return self.name
 
 #Purchase order
 # class PurchaseOrder(models.Model):
