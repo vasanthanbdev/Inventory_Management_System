@@ -70,7 +70,7 @@ class Product(models.Model):
     
 # class Item(models.Model):
 #     id = models.CharField(primary_key=True, default='ITM-'+str(uuid4()).split('-')[1])
-#     product = models.ForeignKey(Product, on_delete=models.PROTECT)
+#     item = models.ForeignKey(Product, on_delete=models.PROTECT)
 #     status = models.CharField(max_length=100, choices=ITEM_STATUS, null=True)
 #     Vendor = models.ForeignKey(Vendor, on_delete=models.PROTECT)
 #     Warehouse = models.ForeignKey(Warehouse, on_delete=models.PROTECT)
@@ -145,7 +145,7 @@ class PurchaseOrder(models.Model):
     delivery_date = models.DateField()
     vendor = models.ForeignKey(Vendor, on_delete=models.PROTECT)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.PROTECT)
-    products = models.ManyToManyField(Product, through='PurchaseOrderItem')
+    items = models.ManyToManyField(Product, through='PurchaseOrderItem')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     
     class Meta:
@@ -163,7 +163,7 @@ class PurchaseOrder(models.Model):
             self.id = new_id
         
         #total price calc
-        self.total_price = self.products.aggregate(
+        self.total_price = self.items.aggregate(
             total_price=Sum(F('purchaseorderitem__total_item_price'))
         )['total_price'] or 0.0
         super().save(*args, **kwargs)
@@ -173,12 +173,12 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderItem(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, null=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
+    item = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
     quantity = models.PositiveIntegerField(default=1)
     total_item_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
     def save(self, *args, **kwargs):
-        self.total_item_price = self.product.price * self.quantity
+        self.total_item_price = self.item.price * self.quantity
         super().save(*args, **kwargs)
     
 
@@ -188,12 +188,12 @@ class PurchaseOrderItem(models.Model):
 #     order_date = models.DateField(default=timezone.now)
 #     delivery_date = models.DateField()
 #     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
-#     products = models.ManyToManyField(Product, through='SalesOrderItem')
+#     items = models.ManyToManyField(Product, through='SalesOrderItem')
 #     status = models.CharField(max_length=100, choices=SALES_STATUS, null=True)
 #     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     
 #     def save(self, *args, **kwargs):
-#         self.total_price = self.products.aggregate(
+#         self.total_price = self.items.aggregate(
 #             total_price=Sum(F('salesorderitem__total_item_price'))
 #         )['total_price'] or 0.0
 #         super().save(*args, **kwargs)
@@ -203,12 +203,12 @@ class PurchaseOrderItem(models.Model):
 
 # class SalesOrderItem(models.Model):
 #     sales_order = models.ForeignKey(SalesOrder, on_delete=models.CASCADE, null=True)
-#     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
+#     item = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
 #     quantity = models.PositiveIntegerField(default=1)
 #     total_item_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
 #     def save(self, *args, **kwargs):
-#         self.total_item_price = self.product.price * self.quantity
+#         self.total_item_price = self.item.price * self.quantity
 #         super().save(*args, **kwargs)
 
     
@@ -220,11 +220,11 @@ class PurchaseOrderItem(models.Model):
 #     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.PROTECT)
 #     bill_date = models.DateField(default=timezone.now)
 #     due_date = models.DateField()
-#     products = models.ManyToManyField(Product, through='BillItem')
+#     items = models.ManyToManyField(Product, through='BillItem')
 #     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     
 #     def save(self, *args, **kwargs):
-#         self.total_price = self.products.aggregate(
+#         self.total_price = self.items.aggregate(
 #             total_price=Sum(F('billitem__total_item_price'))
 #         )['total_price'] or 0.0
 #         super().save(*args, **kwargs)
@@ -234,12 +234,12 @@ class PurchaseOrderItem(models.Model):
 
 # class BillItem(models.Model):
 #     bill = models.ForeignKey(Bill, on_delete=models.PROTECT, null=True)
-#     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
+#     item = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
 #     quantity = models.PositiveIntegerField()
 #     total_item_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
 #     def save(self, *args, **kwargs):
-#         self.total_item_price = self.product.price * self.quantity
+#         self.total_item_price = self.item.price * self.quantity
 #         super().save(*args, **kwargs)
     
       
@@ -250,11 +250,11 @@ class PurchaseOrderItem(models.Model):
 #     sales_order = models.ForeignKey(SalesOrder, on_delete=models.PROTECT)
 #     invoice_date = models.DateField(default=timezone.now)
 #     due_date = models.DateField()
-#     products = models.ManyToManyField(Product, through='InvoiceItem')
+#     items = models.ManyToManyField(Product, through='InvoiceItem')
 #     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     
 #     def save(self, *args, **kwargs):
-#         self.total_price = self.products.aggregate(
+#         self.total_price = self.items.aggregate(
 #             total_price=Sum(F('invoiceitem__total_item_price'))
 #         )['total_price'] or 0.0
 #         super().save(*args, **kwargs)
@@ -264,12 +264,12 @@ class PurchaseOrderItem(models.Model):
 
 # class InvoiceItem(models.Model):
 #     invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, null=True)
-#     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
+#     item = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
 #     quantity = models.PositiveIntegerField()
 #     total_item_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
 #     def save(self, *args, **kwargs):
-#         self.total_item_price = self.product.price * self.quantity
+#         self.total_item_price = self.item.price * self.quantity
 #         super().save(*args, **kwargs)
 
       

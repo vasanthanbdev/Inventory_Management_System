@@ -32,10 +32,10 @@ class CustomerSerializer(serializers.ModelSerializer):
 class PurchaseOrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchaseOrderItem
-        fields = ['product', 'quantity']
+        fields = ['item', 'quantity']
 
 class PurchaseOrderSerializer(serializers.ModelSerializer):
-    items = PurchaseOrderItemSerializer(many=True, read_only=True)
+    items = PurchaseOrderItemSerializer(many=True)
     
     class Meta:
         model = PurchaseOrder

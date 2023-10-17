@@ -6,6 +6,7 @@ from rest_framework import viewsets
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    
 
 
 #vendor views
@@ -20,13 +21,16 @@ class WarehouseViewSet(viewsets.ModelViewSet):
     serializer_class = WarehouseSeializer
     
     
+    
 #customer views
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     
     
+    
 #purchase order views
 class PurchaseOrderViewSet(viewsets.ModelViewSet):
     queryset = PurchaseOrder.objects.all()
     serializer_class = PurchaseOrderSerializer
+    
