@@ -139,47 +139,47 @@ class Customer(models.Model):
         return self.name
 
 #Purchase order
-# class PurchaseOrder(models.Model):
-#     id = models.CharField(max_length=10, primary_key=True, editable=False)
-#     order_date = models.DateField(default=timezone.now)
-#     delivery_date = models.DateField()
-#     vendor = models.ForeignKey(Vendor, on_delete=models.PROTECT)
-#     warehouse = models.ForeignKey(Warehouse, on_delete=models.PROTECT)
-#     products = models.ManyToManyField(Product, through='PurchaseOrderItem')
-#     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+class PurchaseOrder(models.Model):
+    id = models.CharField(max_length=10, primary_key=True, editable=False)
+    order_date = models.DateField(default=timezone.now)
+    delivery_date = models.DateField()
+    vendor = models.ForeignKey(Vendor, on_delete=models.PROTECT)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.PROTECT)
+    products = models.ManyToManyField(Product, through='PurchaseOrderItem')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     
-#     class Meta:
-#         ordering = ['-order_date']
+    class Meta:
+        ordering = ['-order_date']
     
-#     def save(self, *args, **kwargs):
-#         if not self.id:
-#             # Generate ID once
-#             last_po = PurchaseOrder.objects.order_by('id').last()
-#             if not last_po:
-#                 new_id = 'PO-000001'
-#             else:
-#                 id_int = int(last_po.id.split('-')[-1]) 
-#                 new_id = f'PO-{str(id_int+1).zfill(6)}'
-#             self.id = new_id
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # Generate ID once
+            last_po = PurchaseOrder.objects.order_by('id').last()
+            if not last_po:
+                new_id = 'PO-000001'
+            else:
+                id_int = int(last_po.id.split('-')[-1]) 
+                new_id = f'PO-{str(id_int+1).zfill(6)}'
+            self.id = new_id
         
-#         #total price calc
-#         self.total_price = self.products.aggregate(
-#             total_price=Sum(F('purchaseorderitem__total_item_price'))
-#         )['total_price'] or 0.0
-#         super().save(*args, **kwargs)
+        #total price calc
+        self.total_price = self.products.aggregate(
+            total_price=Sum(F('purchaseorderitem__total_item_price'))
+        )['total_price'] or 0.0
+        super().save(*args, **kwargs)
 
-#     def __str__(self):
-#         return f"Purchase Order No: {self.id}"
+    def __str__(self):
+        return f"Purchase Order No: {self.id}"
 
-# class PurchaseOrderItem(models.Model):
-#     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, null=True)
-#     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
-#     quantity = models.PositiveIntegerField(default=1)
-#     total_item_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+class PurchaseOrderItem(models.Model):
+    purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+    total_item_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
-#     def save(self, *args, **kwargs):
-#         self.total_item_price = self.product.price * self.quantity
-#         super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.total_item_price = self.product.price * self.quantity
+        super().save(*args, **kwargs)
     
 
 # #Sales order
