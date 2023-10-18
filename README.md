@@ -15,4 +15,4 @@
 
 - order merging
 
-[def]: https://www.zoho.com/in/inventory/reorder-point-calculator
+[reference]: https://www.zoho.com/in/inventory/reorder-point-calculator
