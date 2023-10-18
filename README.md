@@ -3,16 +3,15 @@
 ## TODO
 
 - sku generator
-- reorder point and safety stock [reference]
+- reorder point and safety stock <https://www.zoho.com/in/inventory/reorder-point-calculator>
 - economic order quantity
-- Product tracking
+- Product tracking <https://www.zoho.com/in/inventory/serial-batch-tracking/>
+- backorder and dropshipping <https://www.zoho.com/in/inventory/backorders-dropshipments/>
 - transfer order
+- order merging
 - create invoices from sales order and exporting in pdf and email
 - create bills form purchase order invoices
-- 
-
-
-
-- order merging
-
-[reference]: https://www.zoho.com/in/inventory/reorder-point-calculator
+- shipping channels
+- payment channels
+- reports <https://www.zoho.com/in/inventory/reporting-and-analytics/>
+- barcode scanning <https://www.zoho.com/in/inventory/barcode-software-small-businesses/>
