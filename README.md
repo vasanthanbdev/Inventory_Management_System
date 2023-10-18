@@ -1,10 +1,9 @@
 # Inventory_Management_System
 
-
 ## TODO
 
 - sku generator
-- reorder point and safety stock (<[def]>)
+- reorder point and safety stock [reference]
 - economic order quantity
 - Product tracking
 - transfer order
