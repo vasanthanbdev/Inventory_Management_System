@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Sum, F
 from django.utils import timezone
+from django.utils.text import slugify
+
 
 #Vendor model
 class Vendor(models.Model):
@@ -62,6 +64,13 @@ class Product(models.Model):
                 new_id = f'PR-{str(id_int+1).zfill(6)}'
             self.id = new_id
         super().save(*args, **kwargs)
+        
+    def generate_sku(self):
+       category = self.category.slug[:3]   
+       name = slugify(self.name)[:4]   
+       random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=3))
+
+       return '-'.join([category, name, random_part])
 
     
     def __str__(self) -> str:
