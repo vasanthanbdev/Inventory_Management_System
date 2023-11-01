@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models import Sum, F
 from django.utils import timezone
 from django.utils.text import slugify
+import random
+import string
 
 
 #Vendor model
@@ -30,8 +32,6 @@ class Vendor(models.Model):
     
     def __str__(self) -> str:
         return self.name
-    
-
     
 
 # Product and Item models
@@ -120,6 +120,7 @@ class Warehouse(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 #customer model
 class Customer(models.Model):
     id = models.CharField(max_length=10, primary_key=True, editable=False)
@@ -147,6 +148,7 @@ class Customer(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 #Purchase order
 class PurchaseOrder(models.Model):
     id = models.CharField(max_length=10, primary_key=True, editable=False)
@@ -172,9 +174,8 @@ class PurchaseOrder(models.Model):
             self.id = new_id
         
         #total price calc
-        self.total_price = self.items.aggregate(
-            total_price=Sum(F('purchaseorderitem__total_item_price'))
-        )['total_price'] or 0.0
+        # self.total_price = sum(item.total_item_price for item in self.items.all())
+        
         super().save(*args, **kwargs)
 
     def __str__(self):

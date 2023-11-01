@@ -30,9 +30,10 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 #purchase orders
 class PurchaseOrderItemSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = PurchaseOrderItem
-        fields = ['item', 'quantity']
+        fields = ['item', 'quantity', 'total_item_price']
 
 class PurchaseOrderSerializer(serializers.ModelSerializer):
     items = PurchaseOrderItemSerializer(many=True)
@@ -43,7 +44,9 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):
         items_data = validated_data.pop('items')
-        po = PurchaseOrder.objects.create(**validated_data)
-        for item_data in items_data:
-            PurchaseOrderItem.objects.create(purchase_order=po, **item_data)
-        return po
+        purchase_order = PurchaseOrder.objects.create(**validated_data)
+        
+        for item in items_data:
+            PurchaseOrderItem.objects.create(purchase_order=purchase_order, **item)
+            
+        return purchase_order
